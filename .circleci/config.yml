@@ -5,9 +5,10 @@ version: 2.1
 orbs:
   node: circleci/node@5.0.2
   heroku: circleci/heroku@1.2.6
+  docker: circleci/docker@2.1.2
 
 jobs:
-  build_and_test: # this can be any name you choose
+  build-and-test: # this can be any name you choose
     executor: node/default # use the default executor defined within the orb
     steps:
       - checkout
@@ -23,6 +24,27 @@ jobs:
           root: ~/project
           paths:
             - .
+  build-and-push:
+    environment:
+      DOCKER_IMAGE: duyhoangptit/nodejs-cicd
+      DOCKER_TAG: latest
+    executor: docker/docker
+    steps:
+      - setup_remote_docker
+      - checkout
+      - docker/check:
+          docker-username: DOCKER_USER
+          docker-password: DOCKER_PASSWORD
+      - docker/build:
+          image:  $DOCKER_IMAGE
+          tag: $DOCKER_TAG
+      - docker/push:
+          digest-path: /tmp/digest.txt
+          image:  $DOCKER_IMAGE
+          tag: $DOCKER_TAG
+      - run:
+          command: |
+            echo "Digest is: $(</tmp/digest.txt)"
   # ...previous job(s)...
   deploy: # this can be any name you choose
     executor: heroku/default
@@ -34,12 +56,21 @@ jobs:
           # force push when pushing to the heroku remote, see: https://devcenter.heroku.com/articles/git
 
 workflows:
-  test_my_app:
+  # name workflow
+  my-nodejs-cicd:
     jobs:
-      - build_and_test
-      - deploy:
+      - build-and-test
+      - build-and-push:
+          # chi duoc push khi nao da pass qua test
           requires:
-            - build_and_test # only deploy if the build_and_test job has completed
+            - build-and-test # only deploy if the build-and-test job has completed
           filters:
             branches:
-              only: main # only deploy when on main
+              only: master # only deploy when on master
+      - deploy:
+          # chi duoc push khi 
+          requires:
+            - build-and-test # only deploy if the build-and-test job has completed
+          filters:
+            branches:
+              only: master # only deploy when on master
