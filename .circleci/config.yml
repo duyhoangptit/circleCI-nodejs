@@ -16,4 +16,4 @@ orbs:
 workflows:
   example-workflow:
     jobs:
-      - node/test
+      - npm/start
