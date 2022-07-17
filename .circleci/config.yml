@@ -25,12 +25,14 @@ jobs:
           paths:
             - .
   build-and-push-docker-hub:
-    # push docker images to docker hub duyhoangptit/nodejs-cicd
     environment:
       DOCKER_IMAGE: duyhoangptit/nodejs-cicd
       DOCKER_TAG: latest
+    # push docker images to docker hub duyhoangptit/nodejs-cicd
     executor: docker/docker
     steps:
+      - run: echo $DOCKER_IMAGE_CONF
+      - run: echo $DOCKER_TAG_CONF
       - setup_remote_docker
       - checkout
       # login
