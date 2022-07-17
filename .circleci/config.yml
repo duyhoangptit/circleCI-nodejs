@@ -25,7 +25,7 @@ jobs:
           paths:
             - .
   build-and-push:
-    # push docker images to docker hub
+    # push docker images to docker hub duyhoangptit/nodejs-cicd
     environment:
       DOCKER_IMAGE: duyhoangptit/nodejs-cicd
       DOCKER_TAG: latest
@@ -33,12 +33,15 @@ jobs:
     steps:
       - setup_remote_docker
       - checkout
+      # login
       - docker/check:
           docker-username: DOCKER_USER
           docker-password: DOCKER_PASSWORD
+      # docker build images
       - docker/build:
           image: $DOCKER_IMAGE
           tag: $DOCKER_TAG
+      # docker push images to docker hub
       - docker/push:
           digest-path: /tmp/digest.txt
           image: $DOCKER_IMAGE
@@ -48,13 +51,16 @@ jobs:
             echo "Digest is: $(</tmp/digest.txt)"
   # ...previous job(s)...
   deploy: # this can be any name you choose
+    # https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git
+    # Lay token tu heroku: HEROKU_API_KEY
+    # Create project in heroku: HEROKU_APP_NAME
+    # force push when pushing to the heroku remote, see: https://devcenter.heroku.com/articles/git
     executor: heroku/default
     steps:
       - attach_workspace:
           at: ~/project
       - heroku/deploy-via-git:
           force: true
-          # force push when pushing to the heroku remote, see: https://devcenter.heroku.com/articles/git
 
 workflows:
   # name workflow
