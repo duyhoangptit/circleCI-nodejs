@@ -24,7 +24,7 @@ jobs:
           root: ~/project
           paths:
             - .
-  build-and-push:
+  build-and-push-docker-hub:
     # push docker images to docker hub duyhoangptit/nodejs-cicd
     environment:
       DOCKER_IMAGE: duyhoangptit/nodejs-cicd
@@ -49,7 +49,7 @@ jobs:
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
-  deploy: # this can be any name you choose
+  deploy-heroku: # this can be any name you choose
     # https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git
     # Lay token tu heroku: HEROKU_API_KEY
     # Create project in heroku: HEROKU_APP_NAME
@@ -66,15 +66,15 @@ workflows:
   my-nodejs-cicd:
     jobs:
       - build-and-test
-      - build-and-push:
+      - build-and-push-docker-hub:
           # chi duoc push khi nao da pass qua test
           requires:
             - build-and-test # only deploy if the build-and-test job has completed
           filters:
             branches:
               only: master # only deploy when on master
-      - deploy:
-          # chi duoc push khi 
+      - deploy-heroku:
+          # chi duoc deploy khi run test pass
           requires:
             - build-and-test # only deploy if the build-and-test job has completed
           filters:
