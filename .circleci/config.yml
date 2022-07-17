@@ -5,6 +5,7 @@ version: 2.1
 orbs:
   node: circleci/node@5.0.2
   heroku: circleci/heroku@1.2.6
+  # docker: circleci/docker@1.4.0
   docker: circleci/docker@2.1.2
 
 jobs:
@@ -31,8 +32,8 @@ jobs:
     # push docker images to docker hub duyhoangptit/nodejs-cicd
     executor: docker/docker
     steps:
-      - run: echo $DOCKER_IMAGE_CONF
-      - run: echo $DOCKER_TAG_CONF
+      # - run: echo $DOCKER_IMAGE_CONF
+      # - run: echo $DOCKER_TAG_CONF
       - setup_remote_docker
       - checkout
       # login
@@ -41,13 +42,13 @@ jobs:
           docker-password: DOCKER_PASSWORD
       # docker build images
       - docker/build:
-          image: ${DOCKER_IMAGE}
-          tag: ${DOCKER_TAG}
+          image: duyhoangptit/nodejs-cicd
+          tag: latest
       # docker push images to docker hub
       - docker/push:
           digest-path: /tmp/digest.txt
-          image: ${DOCKER_IMAGE}
-          tag: ${DOCKER_TAG}
+          image: duyhoangptit/nodejs-cicd
+          tag: latest
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
