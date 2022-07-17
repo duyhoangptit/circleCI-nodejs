@@ -2,6 +2,7 @@
 # --silent: loai bo bot log o terminal
 # --no-cache: Neu muon bo cache thi them option nay vao cuoi cung khi build image
 # su dung 
+# unit test: https://viblo.asia/p/unit-test-cho-nodejs-restful-api-voi-mocha-va-chai-bWrZnLAv5xw
 
 1. Docker build image
     [Docker build](https://docs.docker.com/engine/reference/commandline/build/)
