@@ -3,8 +3,9 @@ version: '3.9'
 services:
   nodejs-cicd:
     container_name: nodejs-cicd
+    # OFF: neu muon build tu docker file thi ON build: .
     image: duyhoangptit/nodejs-cicd:latest
     restart: on-failure
-    build: .
+#    build: .
     ports:
       - '8080:3000'
