@@ -25,6 +25,7 @@ jobs:
           paths:
             - .
   build-and-push:
+    # push docker images to docker hub
     environment:
       DOCKER_IMAGE: duyhoangptit/nodejs-cicd
       DOCKER_TAG: latest
@@ -36,11 +37,11 @@ jobs:
           docker-username: DOCKER_USER
           docker-password: DOCKER_PASSWORD
       - docker/build:
-          image:  $DOCKER_IMAGE
+          image: $DOCKER_IMAGE
           tag: $DOCKER_TAG
       - docker/push:
           digest-path: /tmp/digest.txt
-          image:  $DOCKER_IMAGE
+          image: $DOCKER_IMAGE
           tag: $DOCKER_TAG
       - run:
           command: |
