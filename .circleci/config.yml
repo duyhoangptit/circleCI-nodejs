@@ -42,12 +42,12 @@ jobs:
       # docker build images
       - docker/build:
           image: ${DOCKER_IMAGE_CONF}
-          tag: ${DOCKER_IMAGE_CONF}
+          tag: ${DOCKER_TAG_CONF}
       # docker push images to docker hub
       - docker/push:
           digest-path: /tmp/digest.txt
           image: ${DOCKER_IMAGE_CONF}
-          tag: ${DOCKER_IMAGE_CONF}
+          tag: ${DOCKER_TAG_CONF}
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
